@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Weather Forecast</title>
+<!-- For-Mobile-Apps -->
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<!-- Style -->
+<!-- JavaScript -->
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<!-- Javascript -->
+
+<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('txt').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+function getWeatherDetails(){
+$.ajax({
+      url: 'http://api.openweathermap.org/data/2.5/forecast?q=London,us&mode=json&appid=cce2d2dc12fd50164aff353ad4e09ea2&cnt=5', 
+      dataType: 'json',  
+      success: function(data) {
+     JSON.parse(JSON.stringify(data));
+          $('#city_name').html(data.city.name);
+          $.each(data.list, function(i, item){
+            console.log(item);
+          $('.day').append('<div class="weatherDetails '+item.weather[0].main+'"><h3>'+item.weather[0].main+'</h3><p>'+item.main.temp_min+'  '+item.main.temp_max+'</p></div>');
+          });
+    },
+      error: function(xhr, status, err) {
+        console.error("");
+      }
+    });
+
+}
+</script>
+</head>
+</head>
+<body onload="startTime(),getWeatherDetails()">
+
+<div class="content" style="width:100%">
+
+	<div class="place">
+
+		<div id="txt"></div>
+
+		<div class="dmy">
+			<script type="text/javascript">
+               var mydate=new Date()
+               var year=mydate.getYear()
+               if(year<1000)
+                 year+=1900
+                 var day=mydate.getDay()
+                 var month=mydate.getMonth()
+                 var daym=mydate.getDate()
+               if(daym<10)
+                 daym="0"+daym
+                 var dayarray=new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
+                 var montharray=new Array("January","February","March","April","May","June","July","August","September","October","November","December")
+                 document.write(""+dayarray[day]+", "+montharray[month]+" "+daym+", "+year+"")
+            </script>
+        </div>
+
+        <div class="city">
+        <p id="city_name"></p>
+        </div>
+
+	</div>
+
+	<div class="temp">
+
+        <p>Weather Forecast</p>
+
+        <div class="day">
+
+
+        </div>
+
+	</div>
+
+	<div class="clear"></div>
+	
+</div>
+
+</body>
+</html>
